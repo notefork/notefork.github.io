@@ -13,7 +13,7 @@
       return $w.attr("href");
     },
     youtube: function($w) {
-      return $w.attr("src").match("[^\s]+\.youtube\.com/watch\?v=(\w*)");
+      return $w.attr("src");
     }
   };
 
@@ -39,8 +39,8 @@
       case "image":
         return "<img data-spy='image' src=\"" + url + "\">";
       case "youtube":
-        id = url.match("[^\s]+\.youtube\.com/watch\?v=(\w*)");
-        return "<iframe data-spy='youtube' id=\"ytplayer\" type=\"text/html\" width=\"300\" height=\"250\" src=\"http://www.youtube.com/embed/" + id + "?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>";
+        id = url.match("[^\s]+\.youtube\.com/watch\\?v=(\w*)");
+        return "<iframe data-spy='youtube' id='ytplayer' type='text/html' width='300' height='250' src='http://www.youtube.com/embed/" + id + "'>";
     }
   };
 
@@ -54,7 +54,7 @@
   };
 
   $(function() {
-    var gridster, h, memories;
+    var gridster, h, memories, memory, _i, _len;
     gridster = $('.grid').gridster({
       draggable: {
         stop: function(event, ui) {
@@ -78,9 +78,10 @@
     if (h) {
       memories = Gridster.sort_by_row_and_col_asc(JSON.parse(atob(decodeURIComponent(h))));
     }
-    $.each(memories, function() {
-      return gridster.add_widget(widget(this.content), this.size_x, this.size_y, this.col, this.row);
-    });
+    for (_i = 0, _len = memories.length; _i < _len; _i++) {
+      memory = memories[_i];
+      gridster.add_widget(widget(memory.content), memory.size_x, memory.size_y, memory.col, memory.row);
+    }
     return $('#search-btn').click(function() {
       var content;
       content = $('#search-box').val();

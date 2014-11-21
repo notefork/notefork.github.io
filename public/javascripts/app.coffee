@@ -2,7 +2,7 @@ widget_detective =
   text: ($w)->$w.text()
   image: ($w)->$w.attr("src")
   link: ($w)->$w.attr("href")
-  youtube: ($w)->$w.attr("src").match("[^\s]+\.youtube\.com/watch\?v=(\w*)")
+  youtube: ($w)->$w.attr("src")
 
 get_type = (url) ->
   if url.match "[^\s]+\.(jpg|png|gif|bmp)"
@@ -22,9 +22,8 @@ widget = (url) ->
         when "image"
             "<img data-spy='image' src=\"" + url + "\">"
         when "youtube"
-            id = url.match("[^\s]+\.youtube\.com/watch\?v=(\w*)")
-            "<iframe data-spy='youtube' id=\"ytplayer\" type=\"text/html\" width=\"300\" height=\"250\"
-              src=\"http://www.youtube.com/embed/" + id + "?autoplay=1&origin=http://example.com\"frameborder=\"0\"/>"
+            id = url.match("[^\s]+\.youtube\.com/watch\\?v=(\w*)")
+            "<iframe data-spy='youtube' id='ytplayer' type='text/html' width='300' height='250' src='http://www.youtube.com/embed/" + id + "'>"
 
 save = (gridster) -> 
   window.location.hash = encodeURIComponent btoa JSON.stringify gridster.serialize()
@@ -53,8 +52,9 @@ $ ->
 
   if h then memories =  Gridster.sort_by_row_and_col_asc JSON.parse atob decodeURIComponent h
   
-  $.each(memories, -> gridster.add_widget widget(this.content),this.size_x,this.size_y,this.col,this.row)
-  
+  for memory in memories
+    gridster.add_widget widget(memory.content),memory.size_x,memory.size_y,memory.col,memory.row
+     
  # $('#publish-btn').click -> console.log 'publish'
 
   $('#search-btn').click -> 

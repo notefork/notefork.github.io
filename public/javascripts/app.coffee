@@ -47,11 +47,15 @@ $ ->
       widget_margins: [5,5] 
   ).data('gridster')
   
+  h = window.location.hash.substring(1)
   
-  memories =  Gridster.sort_by_row_and_col_asc JSON.parse atob decodeURIComponent window.location.hash.substring(1)
+  memories = []
+
+  if h then memories =  Gridster.sort_by_row_and_col_asc JSON.parse atob decodeURIComponent h
+  
   $.each(memories, -> gridster.add_widget widget(this.content),this.size_x,this.size_y,this.col,this.row)
   
-  $('#publish-btn').click -> console.log 'publish'
+ # $('#publish-btn').click -> console.log 'publish'
 
   $('#search-btn').click -> 
     content = $('#search-box').val()
